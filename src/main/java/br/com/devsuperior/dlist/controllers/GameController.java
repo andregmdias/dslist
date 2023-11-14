@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("/games")
 public class GameController {
 
-  @Autowired
   private GameService gameService;
+
+  public GameController(GameService gameService) {
+    this.gameService = gameService;
+  }
 
   @GetMapping
   public ResponseEntity<List<GameMinDTO>> index(){
