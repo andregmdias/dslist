@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -32,7 +33,7 @@ class GameControllerTest {
   GameService gameService;
 
   @Test
-  void whenTheGameListIsEmpty() throws Exception {
+  void whenTheGameListIsNotEmpty() throws Exception {
     var game1 =  new Game(1L, "Max Payne", 1999, "FPS", "PS1, PS2, PC",10.0, "urlMaxPayne",
         "Best FPS Game", "Best FPS Game");
     var game2 =  new Game(1L, "Max Payne 2", 2002, "FPS", "PS1, PS2, PC",10.0, "urlMaxPayne",
@@ -55,4 +56,18 @@ class GameControllerTest {
             jsonPath("$[2].title", is(game3.getTitle()))
         );
   }
+
+  @Test
+  void whenTheGameListIsEmpty() throws Exception {
+    given(gameService.getAll()).willReturn(Collections.EMPTY_LIST);
+
+    mvc.perform(get("/games")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpectAll(
+            status().isOk(),
+            jsonPath("$", hasSize(0))
+        );
+  }
+
+  
 }
