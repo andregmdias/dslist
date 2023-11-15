@@ -1,7 +1,6 @@
 package br.com.devsuperior.dlist.dto;
 
 import br.com.devsuperior.dlist.entities.Game;
-import jakarta.persistence.Column;
 import org.springframework.beans.BeanUtils;
 
 public class GameDTO {
