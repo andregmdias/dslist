@@ -68,6 +68,5 @@ class GameControllerTest {
             jsonPath("$", hasSize(0))
         );
   }
-
   
 }
