@@ -1,6 +1,7 @@
 package br.com.devsuperior.dlist.dto;
 
 import br.com.devsuperior.dlist.entities.Game;
+import br.com.devsuperior.dlist.projections.GameMinProjection;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,8 @@ public class GameMinDTO {
   private String title;
   private Integer year;
   private String imgUrl;
+  private String shortDescription;
+
 
   public GameMinDTO() {}
 
@@ -20,6 +23,15 @@ public class GameMinDTO {
     title = entity.getTitle();
     year = entity.getYear();
     imgUrl = entity.getImgUrl();
+    shortDescription = entity.getShortDescription();
+  }
+
+  public GameMinDTO(GameMinProjection projection) {
+    id = projection.getId();
+    title = projection.getTitle();
+    year = projection.getYear();
+    imgUrl = projection.getImgUrl();
+    shortDescription = projection.getShortDescription();
   }
 
   public Long getId() {
@@ -36,5 +48,13 @@ public class GameMinDTO {
 
   public String getImgUrl() {
     return imgUrl;
+  }
+
+  public String getShortDescription() {
+    return shortDescription;
+  }
+
+  public void setShortDescription(String shortDescription) {
+    this.shortDescription = shortDescription;
   }
 }

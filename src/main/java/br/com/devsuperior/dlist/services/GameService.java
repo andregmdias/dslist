@@ -2,10 +2,9 @@ package br.com.devsuperior.dlist.services;
 
 import br.com.devsuperior.dlist.dto.GameDTO;
 import br.com.devsuperior.dlist.dto.GameMinDTO;
+import br.com.devsuperior.dlist.projections.GameMinProjection;
 import br.com.devsuperior.dlist.repositories.GameRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,5 +32,12 @@ public class GameService {
 
     var gameDto = new GameDTO(game);
     return gameDto;
+  }
+
+  @Transactional
+  public List<GameMinDTO> findByList(Long listId){
+    List<GameMinProjection> gamesMinProjectionsList = this.gameRepository.searchByList(listId);
+    List<GameMinDTO> gamesMin = gamesMinProjectionsList.stream().map(GameMinDTO::new).toList();
+    return gamesMin;
   }
 }
