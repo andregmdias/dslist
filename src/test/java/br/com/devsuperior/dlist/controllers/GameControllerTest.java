@@ -1,5 +1,6 @@
 package br.com.devsuperior.dlist.controllers;
 
+import br.com.devsuperior.dlist.dto.GameDTO;
 import br.com.devsuperior.dlist.dto.GameMinDTO;
 import br.com.devsuperior.dlist.entities.Game;
 import br.com.devsuperior.dlist.services.GameService;
@@ -36,9 +37,9 @@ class GameControllerTest {
   void whenTheGameListIsNotEmpty() throws Exception {
     var game1 =  new Game(1L, "Max Payne", 1999, "FPS", "PS1, PS2, PC",10.0, "urlMaxPayne",
         "Best FPS Game", "Best FPS Game");
-    var game2 =  new Game(1L, "Max Payne 2", 2002, "FPS", "PS1, PS2, PC",10.0, "urlMaxPayne",
+    var game2 =  new Game(2L, "Max Payne 2", 2002, "FPS", "PS1, PS2, PC",10.0, "urlMaxPayne",
         "Best FPS Game", "Best FPS Game");
-    var game3 =  new Game(1L, "Max Payne", 2010, "FPS", "PS1, PS2, PC",10.0, "urlMaxPayne",
+    var game3 =  new Game(3L, "Max Payne", 2010, "FPS", "PS1, PS2, PC",10.0, "urlMaxPayne",
         "Best FPS Game", "Best FPS Game");
 
     var gameList = List.of(game1, game2, game3);
@@ -68,5 +69,32 @@ class GameControllerTest {
             jsonPath("$", hasSize(0))
         );
   }
-  
+
+  @Test
+  void shouldReturnTheGameWithTheGivenId() throws Exception {
+    var game1 =  new Game(1L, "Max Payne", 1999, "FPS", "PS1, PS2, PC",10.0, "urlMaxPayne",
+        "Best FPS Game", "Best FPS Game");
+
+    given(gameService.getById(1L)).willReturn(new GameDTO(game1));
+
+    mvc.perform(get("/games/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpectAll(
+            status().isOk(),
+            jsonPath("$.title", is(game1.getTitle())),
+            jsonPath("$.year", is(game1.getYear())),
+            jsonPath("$.genre", is(game1.getGenre()))
+        );
+  }
+
+  @Test
+  void shouldThrowAnExceptionWhenGameDoesntFetchesTheGameWithGivenId() throws Exception {
+    var exception = new Exception("Game not found");
+    given(gameService.getById(20L)).willThrow(exception);
+
+    mvc.perform(get("/games/20")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$", is("Game not found")));
+  }
 }
